@@ -19,6 +19,8 @@ class PostService
 
     /**
      * Get all posts.
+     *
+     * @return Collection
      */
     public function getAllPosts(): Collection
     {
@@ -27,6 +29,9 @@ class PostService
 
     /**
      * Get post by id.
+     *
+     * @param string $id
+     * @return Post
      */
     public function getPostById(string $id): Post
     {
@@ -35,6 +40,10 @@ class PostService
 
     /**
      * Create a new post.
+     *
+     * @param array $postData
+     * @param Authenticatable $user
+     * @return Post
      */
     public function createPost(array $postData, Authenticatable $user): Post
     {
@@ -47,6 +56,11 @@ class PostService
 
     /**
      * Update the specified post.
+     *
+     * @param Post $post
+     * @param array $postData
+     * @param Authenticatable $user
+     * @return void
      */
     public function updatePost(Post $post, array $postData, Authenticatable $user): void
     {
@@ -58,6 +72,10 @@ class PostService
 
     /**
      * Delete the specified post.
+     *
+     * @param string $id
+     * @param Authenticatable $user
+     * @return void
      */
     public function deletePostById(string $id, Authenticatable $user): void
     {

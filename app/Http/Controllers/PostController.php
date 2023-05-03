@@ -18,6 +18,8 @@ class PostController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index(): \Illuminate\Contracts\View\View
     {
@@ -28,6 +30,8 @@ class PostController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function create(): \Illuminate\Contracts\View\View
     {
@@ -36,6 +40,9 @@ class PostController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param PostRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(PostRequest $request): \Illuminate\Http\RedirectResponse
     {
@@ -51,6 +58,9 @@ class PostController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\View
      */
     public function show(string $id): \Illuminate\Contracts\View\View
     {
@@ -61,6 +71,9 @@ class PostController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(string $id): \Illuminate\Contracts\View\View
     {
@@ -71,6 +84,10 @@ class PostController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param Post $post
+     * @param PostRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Post $post, PostRequest $request): \Illuminate\Http\RedirectResponse
     {
@@ -86,6 +103,9 @@ class PostController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(string $id): \Illuminate\Http\RedirectResponse
     {
