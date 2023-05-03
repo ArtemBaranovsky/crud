@@ -10,9 +10,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    protected ?\Illuminate\Contracts\Auth\Authenticatable $user;
+
     public function __construct()
     {
-        // TODO
+        //
     }
 
     protected function checkAuthorization()

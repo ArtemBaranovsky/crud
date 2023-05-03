@@ -61,6 +61,6 @@ class User extends Authenticatable
 
     public function canEditPost(Post $post)
     {
-        return $this->id === $post->author->id || $this->can('edit', $post);
+        return $this->id === $post->author->id;
     }
 }

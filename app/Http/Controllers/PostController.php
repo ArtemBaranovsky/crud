@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
-use App\Repositories\Eloquent\PostRepository;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-
+use App\Services\PostService;
 
 class PostController extends Controller
 {
-    protected PostRepository $postRepository;
+    protected PostService $postService;
 
-    public function __construct(PostRepository $postRepository)
+    public function __construct(PostService $postService)
     {
         parent::__construct();
-        $this->postRepository = $postRepository;
+        $this->postService = $postService;
     }
 
     /**
@@ -23,7 +21,7 @@ class PostController extends Controller
      */
     public function index(): \Illuminate\Contracts\View\View
     {
-        $posts = $this->postRepository->getAll();
+        $posts = $this->postService->getAllPosts();
 
         return view('posts.index', compact('posts'));
     }
@@ -33,21 +31,20 @@ class PostController extends Controller
      */
     public function create(): \Illuminate\Contracts\View\View
     {
-//        dd(auth()->id());
         return view('posts.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(PostRequest $request): \Illuminate\Http\RedirectResponse
     {
-        // add validation
-        $userId = auth()->id();
-        $postData = $request->all();
-        $postData = array_merge($postData, ['user_id' => $userId]);
-//        dd($postData);
-        $post = $this->postRepository->create($postData);
+        $postData = [
+            'title'   => $request->input('title'),
+            'content' => $request->input('content'),
+        ];
+
+        $post = $this->postService->createPost($postData, auth()->user());
 
         return redirect()->route('posts.show', $post->id);
     }
@@ -57,7 +54,7 @@ class PostController extends Controller
      */
     public function show(string $id): \Illuminate\Contracts\View\View
     {
-        $post = $this->postRepository->getById($id);
+        $post = $this->postService->getPostById($id);
 
         return view('posts.show', compact('post'));
     }
@@ -67,7 +64,7 @@ class PostController extends Controller
      */
     public function edit(string $id): \Illuminate\Contracts\View\View
     {
-        $post = $this->postRepository->getById($id);
+        $post = $this->postService->getPostById($id);
 
         return view('posts.edit', compact('post'));
     }
@@ -75,15 +72,14 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Post $post, Request $request): \Illuminate\Http\RedirectResponse
+    public function update(Post $post, PostRequest $request): \Illuminate\Http\RedirectResponse
     {
+        $postData = array_filter([
+            'title'   => $request->input('title'),
+            'content' => $request->input('content'),
+        ]);
 
-        // add validation
-        $userId = auth()->id();
-        $postData = $request->all();
-        $postData = array_merge($postData, ['user_id' => $userId]);
-
-        $this->postRepository->update($post->id, $postData);
+        $this->postService->updatePost($post, $postData, auth()->user());
 
         return redirect()->route('posts.show', $post->id);
     }
@@ -93,7 +89,7 @@ class PostController extends Controller
      */
     public function destroy(string $id): \Illuminate\Http\RedirectResponse
     {
-        $this->postRepository->delete($id);
+        $this->postService->deletePostById($id, auth()->user());
 
         return redirect()->route('posts.index');
     }
