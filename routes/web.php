@@ -32,7 +32,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')->where('post', '[0-9]+');
-
+Route::get('posts-data', [PostController::class, 'getPostData'])->name('posts.data');
 
 
 require __DIR__.'/auth.php';

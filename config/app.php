@@ -170,8 +170,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         Laravel\Sanctum\SanctumServiceProvider::class,
-//        App\Providers\JetstreamServiceProvider::class,
-    ])->toArray(),
+        Livewire\LivewireServiceProvider::class,
+        ])->toArray(),
 
     /*
     |--------------------------------------------------------------------------

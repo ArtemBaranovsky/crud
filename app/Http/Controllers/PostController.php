@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Livewire\DataTable;
+use App\Http\Livewire\PostTable;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\PostService;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -23,9 +26,11 @@ class PostController extends Controller
      */
     public function index(): \Illuminate\Contracts\View\View
     {
+        $modelClass = \App\Models\Post::class;
         $posts = $this->postService->getAllPosts();
+        $headers = ['Id', 'Title', 'Created at', 'Author'];
 
-        return view('posts.index', compact('posts'));
+        return view('posts.index', compact(['posts', 'headers', 'modelClass']));
     }
 
     /**
@@ -113,4 +118,52 @@ class PostController extends Controller
 
         return redirect()->route('posts.index');
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPostData(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $query = Post::select(['id', 'title', 'content', 'created_at']);
+
+        if ($request->filled('search.value')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%'.$request->input('search.value').'%')
+                    ->orWhere('content', 'like', '%'.$request->input('search.value').'%');
+            });
+        }
+
+        if ($request->filled('order.0.column')) {
+            $orderByColumn = $request->input('columns.'.$request->input('order.0.column').'.data');
+            $orderByDirection = $request->input('order.0.dir');
+            $query->orderBy($orderByColumn, $orderByDirection);
+        }
+
+        $totalRecords = $query->count();
+
+        $query->offset($request->input('start'))
+            ->limit($request->input('length'));
+
+        $posts = $query->get();
+
+        $data = [];
+        foreach ($posts as $post) {
+            $data[] = [
+                'id' => $post->id,
+                'title' => $post->title,
+                'content' => $post->content,
+                'created_at' => $post->created_at->format('Y-m-d H:i:s'),
+                'actions' => view('posts.actions', ['post' => $post])->render(),
+            ];
+        }
+
+        return response()->json([
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $data,
+        ]);
+    }
+
 }

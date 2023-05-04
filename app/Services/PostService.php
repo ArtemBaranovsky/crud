@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Post;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class PostService
@@ -22,7 +23,7 @@ class PostService
      *
      * @return Collection
      */
-    public function getAllPosts(): Collection
+    public function getAllPosts(): LengthAwarePaginator
     {
         return $this->postRepository->getAll();
     }

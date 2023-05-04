@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 trait RepositoryTrait
 {
     /**
@@ -54,9 +56,9 @@ trait RepositoryTrait
         return call_user_func_array([$model, $method], $parameters);
     }
 
-    public function getAll(): \Illuminate\Database\Eloquent\Collection
+    public function getAll(): LengthAwarePaginator
     {
-        return $this->model->all();
+        return $this->model->query()->paginate();
     }
 
     public function getById($id)
@@ -80,5 +82,10 @@ trait RepositoryTrait
     {
         $record = $this->getById($id);
         $record->delete();
+    }
+
+    public function search(string $query): LengthAwarePaginator
+    {
+        return $this->model::search($query)->paginate();
     }
 }

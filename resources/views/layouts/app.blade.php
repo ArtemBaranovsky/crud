@@ -13,7 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/scss/app.scss', 'resources/js/app.js'])
-{{--        <link rel="stylesheet" href="/dist/app.css">--}}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -33,5 +33,7 @@
                 {{ $slot }}
             </main>
         </div>
+        @livewireScripts
+        @stack('scripts')
     </body>
 </html>
