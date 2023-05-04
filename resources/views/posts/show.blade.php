@@ -18,6 +18,7 @@
                             <p><span class="fw-bold">Updated:</span><span>{{ $post->updated_at }}</span></p>
 
                             <p>{{ $post->content }}</p>
+                            @can('edit', $modelClass::find($row['id']))
                             <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-secondary">Edit</a>
                             <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
                                   style="display: inline-block;">
@@ -25,6 +26,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
+                            @endcan
                             <a href="{{ route('posts.index') }}" class="btn btn-primary">Return to list</a>
                         </div>
                     </div>

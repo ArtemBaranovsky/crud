@@ -69,9 +69,11 @@ class PostController extends Controller
      */
     public function show(string $id): \Illuminate\Contracts\View\View
     {
+        $modelClass = \App\Models\Post::class;
         $post = $this->postService->getPostById($id);
+        $row = $post;
 
-        return view('posts.show', compact('post'));
+        return view('posts.show', compact(['post', 'modelClass', 'row']));
     }
 
     /**
